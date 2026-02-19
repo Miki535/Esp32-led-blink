@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../../../esp32-projects/esp32-firtst-project"
+		},
+		{
+			"name": "esp-32-proj",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
