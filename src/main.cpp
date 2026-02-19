@@ -23,7 +23,7 @@ const char* html = R"""(
     background-color: cadetblue;
     padding: 40px 40px;
     border-radius: 25px;
-    width: 500px;
+    width: 300px;
     height: max-content;
     text-align: center;
     margin-left: auto;
@@ -40,7 +40,7 @@ button {
     display: block;
     padding: 5px 50px;
     margin: 10px auto;
-    font-size: 60px;
+    font-size: 40px;
     font-weight: bold;
     color: aliceblue;
     background-color: black;
