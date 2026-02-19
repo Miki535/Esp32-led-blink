@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esp32 control</title>
+</head>
+<body>
+    <div class="control-container">
+    <h1>Esp32 Led Blink</h1>
+    <button onclick="toggleLED('on')">Turn ON</button>
+    <button onclick="toggleLED('off')">Turn OFF</button>
+    </div>
+
+    <script>
+        const toggleLED = (state) => {
+            fetch('/' + state)
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(err => console.error(err));
+        }
+    </script>
+</body>
+</html>
