@@ -6,14 +6,53 @@
 
 WebServer server(80);
 
+
 const char* html = R"""(
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Esp32 control</title>
+    <style>
+* {
+    background-color: rgb(29, 29, 29);
+}
+
+.control-container {
+    background-color: cadetblue;
+    padding: 40px 40px;
+    border-radius: 25px;
+    width: 500px;
+    height: max-content;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+.control-container h1{
+    font-size: 60px;
+    color: aliceblue;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+button {
+    display: block;
+    padding: 5px 50px;
+    margin: 10px auto;
+    font-size: 60px;
+    font-weight: bold;
+    color: aliceblue;
+    background-color: black;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+
+}
+button:hover{
+    background-color: #2B3032;
+}
+    </style>
 </head>
 <body>
     <div class="control-container">
@@ -32,10 +71,9 @@ const char* html = R"""(
     </script>
 </body>
 </html>
-)"""; 
-
-const char* ap_ssid = "ESP32-AP";
-const char* ap_password = "12345678";
+)""";
+const char* ssid = "Your_SSID";
+const char* password = "Your_Password";
 
 void handleRoot() {
   server.send(200, "text/html", html);
@@ -45,10 +83,14 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
 
-  WiFi.mode(WIFI_AP);
-  WiFi.softAP(ap_ssid, ap_password);      
-  Serial.print("AP IP: ");
-  Serial.println(WiFi.softAPIP());
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi!");
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
 
   server.on("/", handleRoot);
 
