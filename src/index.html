@@ -30,7 +30,7 @@ button {
     display: block;
     padding: 5px 50px;
     margin: 10px auto;
-    font-size: 60px;
+    font-size: 45px;
     font-weight: bold;
     color: aliceblue;
     background-color: black;
@@ -49,14 +49,23 @@ button:hover{
     <h1>Esp32 Led Blink</h1>
     <button onclick="toggleLED('on')">Turn ON</button>
     <button onclick="toggleLED('off')">Turn OFF</button>
+    <h1>Auto blink</h1>
+    <input type="text" id="fetchTime" placeholder="Enter auto-work time">
+    <button onclick="getWorkTime()">Start</button> 
     </div>
 
     <script>
         const toggleLED = (state) => {
             fetch('/' + state)
                 .then(response => response.text())
-                .then(data => console.log(data))
                 .catch(err => console.error(err));
+        }
+
+        const getWorkTime = () => {
+            const val = document.getElementById('fetchTime').value;
+            fetch('/getTime?text=' + encodeURIComponent(val))
+                .then(response => response.text())
+                .catch(err => console.error(err))
         }
     </script>
 </body>

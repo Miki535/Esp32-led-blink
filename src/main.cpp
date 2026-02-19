@@ -1,6 +1,9 @@
+#include <iostream>
+#include <string>
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
+using namespace std;
 
 #define LED_PIN 2
 
@@ -29,8 +32,8 @@ const char* html = R"""(
     margin-left: auto;
     margin-right: auto;
 }
-.control-container h1{
-    font-size: 60px;
+.control-container {
+    font-size: 40px;
     color: aliceblue;
     font-weight: bold;
     font-family: monospace;
@@ -40,7 +43,7 @@ button {
     display: block;
     padding: 5px 50px;
     margin: 10px auto;
-    font-size: 40px;
+    font-size: 45px;
     font-weight: bold;
     color: aliceblue;
     background-color: black;
@@ -59,21 +62,30 @@ button:hover{
     <h1>Esp32 Led Blink</h1>
     <button onclick="toggleLED('on')">Turn ON</button>
     <button onclick="toggleLED('off')">Turn OFF</button>
+    <h1>Auto blink</h1>
+    <input type="text" id="fetchTime" placeholder="Enter auto-work time">
+    <button onclick="getWorkTime()">Start</button> 
     </div>
 
     <script>
         const toggleLED = (state) => {
             fetch('/' + state)
                 .then(response => response.text())
-                .then(data => console.log(data))
                 .catch(err => console.error(err));
+        }
+
+        const getWorkTime = () => {
+            const val = document.getElementById('fetchTime').value;
+            fetch('/getTime?text=' + encodeURIComponent(val))
+                .then(response => response.text())
+                .catch(err => console.error(err))
         }
     </script>
 </body>
 </html>
 )""";
-const char* ssid = "Your_SSID";
-const char* password = "Your_Password";
+const char* ssid = "";
+const char* password = "";
 
 void handleRoot() {
   server.send(200, "text/html", html);
@@ -99,6 +111,21 @@ void setup() {
     server.send(200, "text/html", "LED is ON");
   });
 
+  server.on("/getTime", []() {
+    if (server.hasArg("text")) {
+        String inputText = server.arg("text");
+        int toIntInputText = inputText.toInt();
+        while (toIntInputText != 0) {
+        digitalWrite(LED_PIN, HIGH);
+        delay(1000);
+        digitalWrite(LED_PIN, LOW);
+        delay(1000);
+        toIntInputText--;
+        }
+    }else {
+        Serial.println("Time argument is null!");
+    }
+  });
   server.on("/off", []() {
     digitalWrite(LED_PIN, LOW);
     server.send(200, "text/html", "LED is OFF");
